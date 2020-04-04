@@ -18,17 +18,18 @@ services:
       - "influxdb"
     command: "/bin/sh -c \"sleep 10 && influx setup \
       --host http://influxdb:9999 \
-      --bucket ${INFLUXDB_BUCKET} \
-      --org ${INFLUXDB_ORG} \
-      --username ${INFLUXDB_USER} \
-      --password $INFLUXDB_PASSWORD \
-      --token $INFLUXDB_TOKEN \
+      --bucket ${INFLUX_BUCKET} \
+      --org ${INFLUX_ORG} \
+      --username ${INFLUX_USER} \
+      --password $INFLUX_PASSWORD \
+      --token $INFLUX_TOKEN \
       --force\""
     environment:
-      INFLUXDB_PASSWORD:
-      INFLUXDB_TOKEN:
-      INFLUXDB_BUCKET:
-      INFLUXDB_ORG:
+      INFLUX_ORG:
+      INFLUX_BUCKET:
+      INFLUX_USER:
+      INFLUX_PASSWORD:
+      INFLUX_TOKEN:
 
 volumes:
   influxdb-data:
