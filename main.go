@@ -19,18 +19,26 @@ func main() {
 		log.Fatalf("[ERROR] Cannot create InfluxDB client: %v", err)
 	}
 
-	reports, err := reports()
-	if err != nil {
-		log.Fatalf("[ERROR] Getting country reports failed: %v", err)
+	countryReports := map[string]func() (reportHistory, error){
+		"confirmed": countryConfirmedCasesReports,
+		"deaths":    countryDeathsReports,
+		"recovered": countryRecoveredReports,
 	}
 
-	for _, report := range reports {
-		writeCount, err := influxDB.writeMetrics(ctx, report)
+	for metric, reportFn := range countryReports {
+		reportHistory, err := reportFn()
 		if err != nil {
-			log.Fatalf("[ERROR] Cannot write metrics to InfluxDB: %v", err)
+			log.Fatalf("[ERROR] Getting %v country reports failed: %v", metric, err)
 		}
 
-		log.Printf("[INFO] Wrote %v metric(s) (%+v, %+v).", writeCount, report.Country, report.Province)
+		for date, reports := range reportHistory {
+			writeCount, err := influxDB.writeCountryMetrics(ctx, metric, date, reports)
+			if err != nil {
+				log.Fatalf("[ERROR] Cannot write metrics to InfluxDB: %v", err)
+			}
+
+			log.Printf("[INFO] Wrote %v `%v` country metric(s) for %v.", writeCount, metric, date)
+		}
 	}
 }
 

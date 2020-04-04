@@ -1,0 +1,34 @@
+version: "3.4"
+
+services:
+  influxdb:
+    image: "quay.io/influxdb/influxdb:2.0.0-beta"
+    volumes:
+      - "influxdb-data:/var/lib/influxdb"
+    command: "influxd run \
+      --bolt-path /var/lib/influxdb/influxd.bolt \
+      --engine-path /var/lib/influxdb/engine \
+      --store bolt"
+    ports:
+      - "9999:9999"
+
+  influxdb-setup:
+    image: "quay.io/influxdb/influxdb:2.0.0-beta"
+    depends_on:
+      - "influxdb"
+    command: "/bin/sh -c \"sleep 10 && influx setup \
+      --host http://influxdb:9999 \
+      --bucket ${INFLUXDB_BUCKET} \
+      --org ${INFLUXDB_ORG} \
+      --username ${INFLUXDB_USER} \
+      --password $INFLUXDB_PASSWORD \
+      --token $INFLUXDB_TOKEN \
+      --force\""
+    environment:
+      INFLUXDB_PASSWORD:
+      INFLUXDB_TOKEN:
+      INFLUXDB_BUCKET:
+      INFLUXDB_ORG:
+
+volumes:
+  influxdb-data:
