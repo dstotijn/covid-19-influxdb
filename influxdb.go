@@ -35,7 +35,7 @@ func newInfluxDB(cfg influxConfig) (*influxDB, error) {
 	}, nil
 }
 
-func (influxDB *influxDB) writeCountryMetrics(ctx context.Context, metric string, date time.Time, reports []report) (int, error) {
+func (influxDB *influxDB) writeCountryMetrics(ctx context.Context, metric string, date time.Time, reports []countryReport) (int, error) {
 	var metrics []influxdb.Metric
 
 	for _, report := range reports {

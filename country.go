@@ -13,13 +13,13 @@ var httpClient = &http.Client{
 	Timeout: 10 * time.Second,
 }
 
-type report struct {
+type countryReport struct {
 	Country  string
 	Province string
 	Amount   int
 }
 
-type reportHistory map[time.Time][]report
+type reportHistory map[time.Time][]countryReport
 
 const (
 	provinceCol = iota
@@ -87,7 +87,7 @@ func countryReports(url string) (reportHistory, error) {
 			if err != nil {
 
 			}
-			reportHist[dates[i]] = append(reportHist[dates[i]], report{
+			reportHist[dates[i]] = append(reportHist[dates[i]], countryReport{
 				Country:  country,
 				Province: province,
 				Amount:   amount,
