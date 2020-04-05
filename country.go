@@ -4,14 +4,9 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
-	"net/http"
 	"strconv"
 	"time"
 )
-
-var httpClient = &http.Client{
-	Timeout: 10 * time.Second,
-}
 
 type countryReport struct {
 	Country  string
