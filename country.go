@@ -85,7 +85,7 @@ func countryReports(url string) (reportHistory, error) {
 		for i, amountString := range record[4:] {
 			amount, err := strconv.Atoi(amountString)
 			if err != nil {
-
+				return nil, fmt.Errorf("cannot parse amount: %v", err)
 			}
 			reportHist[dates[i]] = append(reportHist[dates[i]], countryReport{
 				Country:  country,
